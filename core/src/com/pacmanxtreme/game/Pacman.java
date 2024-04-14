@@ -4,10 +4,14 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.math.MathUtils;
 
 import java.util.ArrayList;
 
 public class Pacman {
+    Node[][] grid;
+    int gridSizeX;
+    int gridSizeY;
     float x;
     float y;
     int size;
@@ -19,10 +23,14 @@ public class Pacman {
 
     Color color = Color.YELLOW;
 
-    public Pacman(float x, float y, int size) {
+    public Pacman(float x, float y, int size, Node[][] grid, int gridSizeX, int gridSizeY) {
         this.x = x;
         this.y = y;
         this.size = size;
+        this.grid = grid;
+        this.gridSizeX = gridSizeX;
+        this.gridSizeY = gridSizeY;
+
     }
 
     public float getX(){
@@ -31,6 +39,31 @@ public class Pacman {
     public float getY() {
         return y;
     }
+
+
+    public Node getCurrentNode() {
+        //Ensure that the grid is initialized
+        if (grid == null || gridSizeX <= 0 || gridSizeY <= 0) {
+            System.err.println("Grid is not properly initialized.");
+            return null;
+        }
+
+        //calculate the grid position based on Pacman's coordinates
+        int gridX = MathUtils.floor(x);
+        int gridY = MathUtils.floor(y);
+
+        if (gridX >= 0 && gridX < gridSizeX && gridY >= 0 && gridY < gridSizeY) {
+            //return the corresponding node from the grid
+            Node playerNode = grid[gridX][gridY];
+            System.out.println(playerNode);
+            return playerNode;
+        } else {
+            //Pacman is outside the grid
+            System.out.println("Pacman is null, pacman is outside of grid area");
+            return null;
+        }
+    }
+
 
     public void update() {
         if (x < 0) {

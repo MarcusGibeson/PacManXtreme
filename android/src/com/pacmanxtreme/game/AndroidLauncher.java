@@ -8,9 +8,14 @@ import com.pacmanxtreme.game.PacManXtreme;
 
 public class AndroidLauncher extends AndroidApplication {
 	@Override
-	protected void onCreate (Bundle savedInstanceState) {
+	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
-		initialize(new PacManXtreme(), config);
+		int gridSizeX = 640;
+		int gridSizeY = 480;
+		int cellSize = 10;
+		int[][] wallPositions = PacmanLevel1Maze.getWallPositions();
+		Grid grid = new Grid(wallPositions, gridSizeX, gridSizeY, cellSize);
+		initialize(new PacManXtreme(grid), config);
 	}
 }

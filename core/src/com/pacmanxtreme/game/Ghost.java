@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 import java.util.ArrayList;
 
@@ -14,6 +15,7 @@ public class Ghost {
     int size;
     int xSpeed;
     int ySpeed;
+
 
     ArrayList<Wall> walls;
     Texture ghostTexture;
@@ -45,6 +47,16 @@ public class Ghost {
         ghostSprite.setPosition(x, y);
     }
 
+    public float getX() {return x;}
+    public float getY() {return y;}
+
+    public int getXSpeed() {return xSpeed;}
+    public int getYSpeed() {return ySpeed;}
+
+    public void setPosition(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
     public void render(SpriteBatch batch) {
         ghostSprite.draw(batch);
     }
@@ -121,4 +133,6 @@ public class Ghost {
             ghostSprite.setTexture(ghostDownTexture);
         }
     }
+
+
 }

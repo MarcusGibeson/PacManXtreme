@@ -8,7 +8,9 @@ public class PacmanLevel1Maze {
     //y: 480
     //x mid: 320
     // y mid: 240
-    private static final int[][] WALL_POSITIONS = {
+
+
+    public static final int[][] WALL_POSITIONS = {
 //            1.
            {0, 308, 10, 130},
 //            2.

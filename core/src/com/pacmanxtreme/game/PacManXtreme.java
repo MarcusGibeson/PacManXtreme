@@ -2,6 +2,7 @@ package com.pacmanxtreme.game;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -22,8 +23,23 @@ public class PacManXtreme extends ApplicationAdapter {
 	ArrayList<Coin> coins;
 	ArrayList<Wall> walls;
 	ArrayList<Ghost> ghosts;
+	RedGhost redGhost;
+
+	int gridSizeX;
+	int gridSizeY;
+	int cellSize;
 
 	Texture backgroundTexture;
+	private Grid grid;
+
+	public PacManXtreme(Grid grid) {
+		this.grid = grid;
+		this.gridSizeX = grid.getGridSizeX();
+		this.gridSizeY = grid.getGridSizeY();
+		this.cellSize = grid.getCellSize();
+	}
+
+
 
 	@Override
 	public void create () {
@@ -33,7 +49,7 @@ public class PacManXtreme extends ApplicationAdapter {
 		stage = new Stage();
 		Gdx.input.setInputProcessor(stage);
 		shape = new ShapeRenderer();
-		pacman = new Pacman(320, 120,30);
+		pacman = new Pacman(325, 125,20, grid.getNodes(), gridSizeX, gridSizeY);
 		coins = new ArrayList<>();
 		walls = new ArrayList<>();
 		ghosts = new ArrayList<>();
@@ -51,7 +67,7 @@ public class PacManXtreme extends ApplicationAdapter {
 		}
 
 		//ghost
-		Ghost redGhost = new Ghost(260,230, 30, 0,"data/red/redGhostCenter.png", "data/red/redGhostUp.png", "data/red/redGhostDown.png", "data/red/redGhostLeft.png","data/red/redGhostRight.png", walls);
+		redGhost = new RedGhost(260,230, 100, 100,"data/red/redGhostCenter.png", "data/red/redGhostUp.png", "data/red/redGhostDown.png", "data/red/redGhostLeft.png","data/red/redGhostRight.png", walls, pacman, grid.getNodes(),gridSizeX, gridSizeY);
 		ghosts.add(redGhost);
 		Ghost greenGhost = new Ghost(300, 230, 0, -30, "data/green/greenGhostCenter.png", "data/green/greenGhostUp.png", "data/green/greenGhostDown.png", "data/green/greenGhostLeft.png", "data/green/greenGhostRight.png", walls);
 		ghosts.add(greenGhost);
@@ -70,6 +86,17 @@ public class PacManXtreme extends ApplicationAdapter {
 //
 //		batch.end();
 
+//		shape.begin(ShapeRenderer.ShapeType.Line);
+//		shape.setColor(Color.WHITE);
+//
+//		for (int x = 0; x <= gridSizeX; x += cellSize) {
+//			shape.line(x, 0, x, gridSizeY);
+//		}
+//
+//		for (int y = 0; y <= gridSizeY; y += cellSize) {
+//			shape.line(0, y, gridSizeX, y);
+//		}
+//		shape.end();
 
 		stage.draw();
 		shape.begin(ShapeRenderer.ShapeType.Filled);
@@ -91,17 +118,21 @@ public class PacManXtreme extends ApplicationAdapter {
 			coin.draw(shape);
 		}
 
-
 		//draw ghosts
 		batch.begin();
-		for (Ghost ghost : ghosts) {
-			ghost.render(batch);
+//		for (Ghost ghost : ghosts) {
+//			ghost.update(Gdx.graphics.getDeltaTime());
+//			ghost.render(batch);
+//		}
+
+		if (redGhost != null) {
+			redGhost.update(Gdx.graphics.getDeltaTime());
+			redGhost.render(batch);
+			System.out.println("Red Ghost position: (" + redGhost.getX() + ", " + redGhost.getY() + ")");
+			redGhost.renderPath(shape);
+
 		}
 		batch.end();
-
-		for (Ghost ghost : ghosts) {
-			ghost.update(Gdx.graphics.getDeltaTime());
-		}
 
 		//check collisions
 		pacman.checkCollision(coins);

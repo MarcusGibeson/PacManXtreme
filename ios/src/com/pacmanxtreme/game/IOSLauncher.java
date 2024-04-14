@@ -11,7 +11,12 @@ public class IOSLauncher extends IOSApplication.Delegate {
     @Override
     protected IOSApplication createApplication() {
         IOSApplicationConfiguration config = new IOSApplicationConfiguration();
-        return new IOSApplication(new PacManXtreme(), config);
+        int gridSizeX = 640;
+        int gridSizeY = 480;
+        int cellSize = 10;
+        int[][] wallPositions = PacmanLevel1Maze.getWallPositions();
+        Grid grid = new Grid(wallPositions, gridSizeX, gridSizeY, cellSize);
+        return new IOSApplication(new PacManXtreme(grid), config);
     }
 
     public static void main(String[] argv) {
