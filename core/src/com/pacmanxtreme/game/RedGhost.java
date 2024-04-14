@@ -126,9 +126,9 @@ public class RedGhost extends Ghost {
                     System.out.println("Removing first node. Equal to ghost's position.");
                     path.remove(0);
                 }
-                for (Node node : path) {
-                    System.out.println("Node: (" + node.getX() + "," + node.getY() + ")");
-                }
+//                for (Node node : path) {
+//                    System.out.println("Node: (" + node.getX() + "," + node.getY() + ")");
+//                }
             } else {
                 System.out.println("No path found.");
             }
@@ -159,47 +159,42 @@ public class RedGhost extends Ghost {
 
     private void MoveTo(Node nextNode, float deltaTime) {
         float positionThreshold = 0.01f;
-
-        //check if the ghost is already at the target node
-        if (Math.abs(getX() - nextNode.getX()) < positionThreshold && Math.abs(getY() - nextNode.getY()) < positionThreshold) {
-            //remove node from the path
-            pathToTarget.remove(0);
-            System.out.println("Ghost is already at the target node");
-            return;
-        }
-
-        //Calculate the distance and direction to the next node
         float dx = nextNode.getX() - getX();
         float dy = nextNode.getY() - getY();
         float distanceToNextNode = (float) Math.sqrt(dx * dx + dy * dy);
-        System.out.println("Distance to next node: " + distanceToNextNode);
 
-        //Determine the movement speed based on deltaTime and ghost's speed
+        if (distanceToNextNode <= positionThreshold) {
+            // Remove node from the path if the ghost is very close to it
+            pathToTarget.remove(0);
+            System.out.println("Ghost reached the next node in the path: (" + getX() + ", " + getY() + ")");
+            System.out.println("Node removed from the path. New path length: " + pathToTarget.size());
+            return;
+        }
+
+        // Determine movement speed based on deltaTime and ghost's speed
         float movementSpeedX = getXSpeed() * deltaTime;
-        System.out.println("Movement speed on x-axis: " + movementSpeedX);
         float movementSpeedY = getYSpeed() * deltaTime;
-        System.out.println("Movement speed on y-axis: " + movementSpeedY);
 
-        //If the distance to the next node is greater than the movement speed,
-        //move towards the next node. Otherwise, directly set the ghost's position to the next node.
         if (distanceToNextNode <= Math.max(movementSpeedX, movementSpeedY)) {
-            //Move towards next node
-            System.out.println("Not rounded. Moving to (" + nextNode.getX() + ", " + nextNode.getY() + " ).");
+            // Move directly to the next node
             setPosition(nextNode.getX(), nextNode.getY());
             pathToTarget.remove(0);
+            System.out.println("Ghost reached the next node in the path: (" + getX() + ", " + getY() + ")");
+            System.out.println("Node removed from the path. New path length: " + pathToTarget.size());
         } else {
-            //Calculate the movement ratio to ensure smooth movement
+            // Move towards the next node
             float movementRatioX = movementSpeedX / distanceToNextNode;
             float movementRatioY = movementSpeedY / distanceToNextNode;
             float newX = getX() + dx * movementRatioX;
             float newY = getY() + dy * movementRatioY;
 
-            //Round the float positions to the nearest integer value
+            // Round the float positions to the nearest integer value
             int roundedX = Math.round(newX);
             int roundedY = Math.round(newY);
-            System.out.println("(X,Y) rounded. Moving to (" + roundedX + ", " + roundedY + " ).");
-            //update the ghost's position
+
+            // Update the ghost's position
             setPosition(roundedX, roundedY);
+            System.out.println("Ghost moving to: (" + roundedX + ", " + roundedY + ")");
         }
     }
 
